@@ -7,6 +7,7 @@ from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.common.by import By
 from selenium.common.exceptions import NoSuchElementException
+import config
 
 class Tester():
     """
@@ -25,10 +26,10 @@ class Tester():
         self.options = Options()
         #self.options.add_argument('--headless') # скрываем окно браузера при запуске сервера, убрать # при необходимости
         # запускаем webdriver
-        self.browser = webdriver.Chrome(r'.\chromedriver\chromedriver.exe', options=self.options)
+        self.browser = webdriver.Chrome(executable_path=config.driver_path, options=self.options)
         # переадресуем запись логов в файл в папке ./logs, в названии указываем время инициализации класса
         # настраиваем базовые настройки логгирования (вывод в консоль и в файл)
-        file_log = logging.FileHandler(f'.\logs\log - {datetime.now().strftime("%d-%m-%Y %H-%M-%S")}.log')
+        file_log = logging.FileHandler(config.logfile_name)
         console_log = logging.StreamHandler()
         logging.basicConfig(handlers=(file_log, console_log),
                             level=logging.INFO,
@@ -151,8 +152,9 @@ class Tester():
         # если в ходе проверки произошла успешная авторизация, перезапускаем webdriver для сброса авторизации
         if status_dict['Успешная авторизация']['status'] == True:
             self.close_webdriver()
+            self.logger.info("Перезапуск webdriver для очистки cookies и повторной авторизации")
             # запускаем webdriver
-            self.browser = webdriver.Chrome('./chromedriver/chromedriver.exe', options=self.options)
+            self.browser = webdriver.Chrome(config.driver_path, options=self.options)
         return status_dict
 
     def authorize(self, login, password):

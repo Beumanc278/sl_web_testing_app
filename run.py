@@ -4,6 +4,7 @@ import pandas as pd
 from tqdm import tqdm
 from datetime import datetime
 import logging
+import config
 
 def write_results(data, check_id, status_dict):
     """
@@ -41,12 +42,11 @@ if __name__ == "__main__":
     logger.info('Инициализирован класс Tester...')
     
     # загружаем в датафрейм чек-лист и исходные данные для проверки
-    data = pd.read_excel(os.path.abspath(os.curdir) + '\\input_data\\Чек-лист.xlsx', engine='openpyxl')
+    data = pd.read_excel(config.input_data, engine='openpyxl')
     logger.info(f'Загружены данные проверок из чек-листа...')
     
     # фиксируем ссылку на тестируемый сайт и передаем в tester
-    test_url = 'https://area-dev.sl-int.team.'
-    tester.set_test_url(test_url)
+    tester.set_test_url(config.test_url)
 
     # из всего датафрейма выбираю только строки с объектом тестирования = "Форма авторизации"
     check_data = data[data['Объект тестирования'] == 'Форма авторизации']
@@ -84,12 +84,9 @@ if __name__ == "__main__":
             for check_id in tqdm(check_data['ID']):
                 data = write_results(data, check_id, status_dict)
 
-    # создаем файл Excel в папке ./results для сохранения результатов
-    result_filename = f'result - {datetime.now().strftime("%d-%m-%Y %H-%M-%S")}.xlsx'
-    result_savepath = os.path.abspath(os.curdir) + '\\results\\' + result_filename
     # сохраняем книгу Excel с результатами
-    data.to_excel(result_savepath)
-    logger.info(f'Файл с результатами проверок сохранен в {result_savepath}')
+    data.to_excel(config.result_savepath)
+    logger.info(f'Файл с результатами проверок сохранен в {config.result_savepath}')
     # завершаем работу web-драйвера
     tester.close_webdriver()
     logger.info('Завершена работа Tester')
