@@ -35,7 +35,7 @@ pip install -r requirements.txt
 
   **Для Linux (проверено на Manjaro Linux):**
   
-    1) В файл ~/.bashrc в конец добавить строку ``` export PATH="$HOME/путь_до_папки_с_webdriver:$PATH" ```
+    1) В файл ~/.bashrc в конец добавить строку ``` export PATH="$HOME/путь_до_папки_проекта/sl_web_testing_app/chromedriver/Linux/:$PATH" ```
     2) Сохранить файл и загрузить новое значение в текущий сеанс оболочки ``` source ~/.bashrc ```
     
 4) Для запуска скрипта использовать команду ``` python run.py ```
